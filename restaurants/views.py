@@ -1,6 +1,7 @@
 import random
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.views import View
 
 # Create your views here.
 
@@ -8,7 +9,6 @@ from django.shortcuts import render
 
 def home(request):
     num = None
-    num = random.randint(0,10000000000)
     some_list = [
         random.randint(0,10000000000),
         random.randint(0,10000000000),
@@ -21,4 +21,31 @@ def home(request):
         "num":num,
         "some_list":some_list
     }
-    return render(request,"base.html",context)#response
+    return render(request,"home.html",context)#response
+
+def about(request):
+
+    context = {
+
+    }
+    return render(request,"about.html",context)#response
+
+def contact(request):
+    context = {
+
+    }
+    return render(request, "contact.html", context)  # response
+
+
+class ContactView(View):
+    def get(self, request, *args, **kwargs):
+        context = {}
+        return render(request, "contact.html", context)  # response
+
+    # def post(self, request, *args, **kwargs):
+    #     context = {}
+    #     return render(request, "contact.html", context)  # response
+    #
+    # def put(self, request, *args, **kwargs):
+    #     context = {}
+    #     return render(request, "contact.html", context)  # response
