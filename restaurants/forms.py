@@ -1,5 +1,7 @@
 from django import forms
 
+from .models import RestaurantLocation
+
 class RestaurantCreateForm(forms.Form):
     name        = forms.CharField()
     location    = forms.CharField(required=False)
@@ -10,3 +12,12 @@ class RestaurantCreateForm(forms.Form):
         if name == "Hello":
             raise forms.ValidationError("Not a valid name")
         return name
+
+class RestaurantsLocationCreateForm(forms.ModelForm):
+    class Meta:
+        model = RestaurantLocation
+        fields = [
+            'name',
+            'location',
+            'category',
+        ]
