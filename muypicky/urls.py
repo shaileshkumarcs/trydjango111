@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name = 'home.html')),
     url(r'^restaurants/$', RestaurantsListView.as_view()),
     # url(r'^restaurants/(?P<slug>\w+)/$', RestaurantsListView.as_view()),
-    url(r'^restaurants/(?P<rest_id>\w+)/$', RestaurantsDetailView.as_view()),
+    url(r'^restaurants/(?P<slug>[\w-]+)/$', RestaurantsDetailView.as_view()),
     #url(r'^restaurants/north/$', NorthIndianRestaurantListView.as_view()),
     url(r'^about/$', TemplateView.as_view(template_name = 'about.html')),
     url(r'^contact/$', TemplateView.as_view(template_name = 'contact.html')),
