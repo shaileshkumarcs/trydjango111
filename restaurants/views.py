@@ -5,17 +5,35 @@ from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.views.generic import TemplateView, ListView, DetailView
 
+from .forms import RestaurantCreateForm
 from .models import RestaurantLocation
 
 # Create your views here.
 
 #function based view
 
+def restaurant_createview(request):
+    template_name = 'restaurants/form.html'
+    context = {
+
+    }
+    return render(request, template_name, context)
+
+
+
 def restaurants_listview(request):
     template_name = 'restaurants/restaurants_list.html'
     queryset = RestaurantLocation.objects.all()
     context = {
         "object_list" : queryset
+    }
+    return render(request, template_name, context)
+
+def restaurants_detailview(request, slug):
+    template_name = 'restaurants/restaurantlocation_detail.html'
+    obj = RestaurantLocation.objects.get(slug=slug)
+    context = {
+        "objects" : obj
     }
     return render(request, template_name, context)
 
@@ -34,7 +52,7 @@ class RestaurantsListView(ListView):
         return queryset
 
 class RestaurantsDetailView(DetailView):
-    queryset = RestaurantLocation.objects.all()
+    queryset = RestaurantLocation.objects.all() #.filter(category__iexact='I')
 
     # def get_context_data(self, *args, **kwargs):
     #     print(self.kwargs)
