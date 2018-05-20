@@ -4,8 +4,9 @@
 
 {% block content %}
 <h1>Add Restaurant</h1>
-{% if errors %}
-{{ errors }}
+
+{% if from.errors.non_field_errors %}
+{{ from.errors.non_field_errors }}
 {% endif %}
 <form method="POST">{% csrf_token  %}
     {{ form.as_p  }}
