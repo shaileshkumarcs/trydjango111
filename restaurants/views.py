@@ -1,4 +1,7 @@
 # import random
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -12,6 +15,7 @@ from .models import RestaurantLocation
 
 #function based view
 
+@login_required()
 def restaurant_createview(request):
     form = RestaurantsLocationCreateForm(request.POST or None)
     errors = None
@@ -83,15 +87,14 @@ class RestaurantsDetailView(DetailView):
     #     return obj
 
 
-class RestaurantCreateView(CreateView):
+class RestaurantCreateView(LoginRequiredMixin, CreateView):
     form_class = RestaurantsLocationCreateForm
+    login_url = '/login'
     template_name = 'restaurants/form.html'
     success_url = '/restaurants/'
 
     def form_valid(self,form):
         instance = form.save(commit=False)
-        # customize
-        # like a pre_save
         instance.owner = self.request.user
         #instance.save()
         return super(RestaurantCreateView,self).form_valid(form)
