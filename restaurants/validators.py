@@ -18,3 +18,10 @@ def validation_category(value):
     cat = value.capitalize()
     if not value in CATEGORIES and not cat in CATEGORIES:
         raise ValidationError(f"{value} not a valid category")
+
+LOCATIONS = ['Bangalore','Delhi','Pune','Hyderabad']
+
+def validation_location(value):
+    loc = value.capitalize()
+    if not value in LOCATIONS and not loc in LOCATIONS:
+        raise ValidationError(f"{value} not in valid locations")

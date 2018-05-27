@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 from restaurants.views import (
+        restaurant_createview,
         restaurants_listview,
         RestaurantsListView,
         RestaurantsDetailView,
@@ -28,7 +29,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', TemplateView.as_view(template_name = 'home.html')),
     url(r'^restaurants/$', RestaurantsListView.as_view()),
-    url(r'^restaurants/create/$', RestaurantCreateView.as_view()),
+    url(r'^restaurants/create/$', restaurant_createview),#RestaurantCreateView.as_view()),
     url(r'^restaurants/(?P<slug>[\w-]+)/$', RestaurantsDetailView.as_view()),
     #url(r'^restaurants/north/$', NorthIndianRestaurantListView.as_view()),
     url(r'^about/$', TemplateView.as_view(template_name = 'about.html')),
