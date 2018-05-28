@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import TemplateView
 
@@ -32,16 +32,12 @@ from restaurants.views import (
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', TemplateView.as_view(template_name = 'home.html')),
+    url(r'^$', TemplateView.as_view(template_name = 'home.html'), name="home"),
     url('^login/$', LoginView.as_view(), name='login'),
-    url('^password_reset_view/$', PasswordResetView.as_view(), name='password_reset'),
-    url(r'^restaurants/$', RestaurantsListView.as_view()),
-    url(r'^restaurants/create/$', RestaurantCreateView.as_view()),
-    #url(r'^restaurants/create/$', restaurant_createview),
-    url(r'^restaurants/(?P<slug>[\w-]+)/$', RestaurantsDetailView.as_view()),
-    #url(r'^restaurants/north/$', NorthIndianRestaurantListView.as_view()),
-    url(r'^about/$', TemplateView.as_view(template_name = 'about.html')),
-    url(r'^contact/$', TemplateView.as_view(template_name = 'contact.html')),
+    #url('^password_reset_view/$', PasswordResetView.as_view(), name='password_reset'),
+    url(r'^restaurants/', include('restaurants.urls', namespace='restaurants')),
+    url(r'^about/$', TemplateView.as_view(template_name = 'about.html'), name="about"),
+    url(r'^contact/$', TemplateView.as_view(template_name = 'contact.html'), name="contact"),
 
 ]
 
