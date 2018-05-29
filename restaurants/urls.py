@@ -16,16 +16,16 @@ Including another URLconf
 from django.conf.urls import url
 
 from .views import (
-        RestaurantsListView,
+        RestaurantCreateView,
         RestaurantsDetailView,
-        RestaurantCreateView
+        RestaurantsListView,
+        RestaurantUpdateView
     )
 
 urlpatterns = [
-    url(r'^$', RestaurantsListView.as_view(), name="list"),
     url(r'^create/$', RestaurantCreateView.as_view(), name="create"),
-    #url(r'^restaurants/create/$', restaurant_createview),
-    url(r'^(?P<slug>[\w-]+)/$', RestaurantsDetailView.as_view(), name="detail"),
-    #url(r'^restaurants/north/$', NorthIndianRestaurantListView.as_view()),
+    url(r'^(?P<slug>[\w-]+)/$', RestaurantUpdateView.as_view(), name="detail"),
+    url(r'^$', RestaurantsListView.as_view(), name="list"),
+    #url(r'^(?P<slug>[\w-]+)/edit/$', RestaurantUpdateView.as_view(), name="edit"),
 ]
 

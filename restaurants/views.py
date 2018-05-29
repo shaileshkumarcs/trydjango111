@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView, CreateView
+from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView
 
 from .forms import RestaurantCreateForm, RestaurantsLocationCreateForm
 from .models import RestaurantLocation
@@ -57,34 +57,23 @@ from .models import RestaurantLocation
 #     }
 #     return render(request, template_name, context)
 
-class RestaurantsListView(ListView):
+class RestaurantsListView(LoginRequiredMixin,ListView):
     def get_queryset(self):
-        print(self.kwargs)
-        slug = self.kwargs.get("slug")
-        if slug:
-            queryset = RestaurantLocation.objects.filter(
-                    Q(category__iexact=slug) |
-                    Q(category__icontains=slug)
-                    )
-        else:
-            queryset = RestaurantLocation.objects.all()
-        return queryset
+        # print(self.kwargs)
+        # slug = self.kwargs.get("slug")
+        # if slug:
+        #     queryset = RestaurantLocation.objects.filter(
+        #             Q(category__iexact=slug) |
+        #             Q(category__icontains=slug)
+        #             )
+        # else:
+        #     queryset = RestaurantLocation.objects.all()
+        # return queryset
+        return RestaurantLocation.objects.filter(owner=self.request.user)
 
-class RestaurantsDetailView(DetailView):
-    queryset = RestaurantLocation.objects.all() #.filter(category__iexact='I')
-
-    # def get_context_data(self, *args, **kwargs):
-    #     print(self.kwargs)
-    #     context = super(RestaurantsDetailView, self).get_context_data(*args, **kwargs)
-    #     print(context)
-    #     return context
-
-    # def get_object(self, *args, **kwargs):
-    #     rest_id = self.kwargs.get('rest_id')
-    #     obj = get_object_or_404(RestaurantLocation, id=rest_id) #pk=rest_id
-    #
-    #     return obj
-
+class RestaurantsDetailView(LoginRequiredMixin, DetailView):
+    def get_queryset(self):
+        return RestaurantLocation.objects.filter(owner=self.request.user) #.filter(category__iexact='I')
 
 class RestaurantCreateView(LoginRequiredMixin, CreateView):
     form_class = RestaurantsLocationCreateForm
@@ -101,5 +90,19 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, *args, **kwargs):
         context = super(RestaurantCreateView, self).get_context_data(*args, **kwargs)
         context['title'] = 'Add Restaurant'
-
         return  context
+
+class RestaurantUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = RestaurantsLocationCreateForm
+    login_url = '/login'
+    template_name = 'restaurants/detail-update.html'
+    #success_url = '/restaurants/'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(RestaurantUpdateView, self).get_context_data(*args, **kwargs)
+        name = self.get_object().name
+        context['title'] = f'Update Restaurant : {name}'
+        return  context
+
+    def get_queryset(self):
+        return RestaurantLocation.objects.filter(owner=self.request.user) #.filter(category__iexact='I')
