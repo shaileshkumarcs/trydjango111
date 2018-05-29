@@ -16,8 +16,6 @@ Including another URLconf
 from django.conf.urls import url
 
 from .views import (
-        # restaurant_createview,
-        # restaurants_listview,
         RestaurantsListView,
         RestaurantsDetailView,
         RestaurantCreateView

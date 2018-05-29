@@ -15,50 +15,49 @@ from .models import RestaurantLocation
 
 #function based view
 
-@login_required()
-def restaurant_createview(request):
-    form = RestaurantsLocationCreateForm(request.POST or None)
-    errors = None
-    if form.is_valid():
-        if request.user.is_authenticated():
-            instance = form.save(commit=False)
-            # customize
-            # like a pre_save
-            instance.owner = request.user
-            instance.save()
-            return HttpResponseRedirect('/restaurants/')
-        else:
-            return HttpResponseRedirect('/login/')
-    if form.errors:
-        errors = form.errors
-
-    template_name = 'restaurants/form.html'
-    context = {
-        "form" : form,
-        "errors" : errors
-    }
-    return render(request, template_name, context)
-
-
-
-def restaurants_listview(request):
-    template_name = 'restaurants/restaurants_list.html'
-    queryset = RestaurantLocation.objects.all()
-    context = {
-        "object_list" : queryset
-    }
-    return render(request, template_name, context)
-
-def restaurants_detailview(request, slug):
-    template_name = 'restaurants/restaurantlocation_detail.html'
-    obj = RestaurantLocation.objects.get(slug=slug)
-    context = {
-        "objects" : obj
-    }
-    return render(request, template_name, context)
+# @login_required()
+# def restaurant_createview(request):
+#     form = RestaurantsLocationCreateForm(request.POST or None)
+#     errors = None
+#     if form.is_valid():
+#         if request.user.is_authenticated():
+#             instance = form.save(commit=False)
+#             # customize
+#             # like a pre_save
+#             instance.owner = request.user
+#             instance.save()
+#             return HttpResponseRedirect('/restaurants/')
+#         else:
+#             return HttpResponseRedirect('/login/')
+#     if form.errors:
+#         errors = form.errors
+#
+#     template_name = 'restaurants/form.html'
+#     context = {
+#         "form" : form,
+#         "errors" : errors
+#     }
+#     return render(request, template_name, context)
+#
+#
+#
+# def restaurants_listview(request):
+#     template_name = 'restaurants/restaurants_list.html'
+#     queryset = RestaurantLocation.objects.all()
+#     context = {
+#         "object_list" : queryset
+#     }
+#     return render(request, template_name, context)
+#
+# def restaurants_detailview(request, slug):
+#     template_name = 'restaurants/restaurantlocation_detail.html'
+#     obj = RestaurantLocation.objects.get(slug=slug)
+#     context = {
+#         "objects" : obj
+#     }
+#     return render(request, template_name, context)
 
 class RestaurantsListView(ListView):
-
     def get_queryset(self):
         print(self.kwargs)
         slug = self.kwargs.get("slug")
@@ -90,7 +89,7 @@ class RestaurantsDetailView(DetailView):
 class RestaurantCreateView(LoginRequiredMixin, CreateView):
     form_class = RestaurantsLocationCreateForm
     login_url = '/login'
-    template_name = 'restaurants/form.html'
+    template_name = 'form.html'
     #success_url = '/restaurants/'
 
     def form_valid(self,form):
@@ -98,3 +97,9 @@ class RestaurantCreateView(LoginRequiredMixin, CreateView):
         instance.owner = self.request.user
         #instance.save()
         return super(RestaurantCreateView,self).form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(RestaurantCreateView, self).get_context_data(*args, **kwargs)
+        context['title'] = 'Add Restaurant'
+
+        return  context
