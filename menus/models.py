@@ -18,6 +18,9 @@ class Item(models.Model):
     timestamp   = models.DateTimeField(auto_now_add=True)
     updated     = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
+
     def get_absolute_url(self): #get_absolute_url
         #return f"/restaurants/{self.slug}" #this is for hard code url pattern
         return reverse("menus:detail", kwargs={'pk':self.pk})

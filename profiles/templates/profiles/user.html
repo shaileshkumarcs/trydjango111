@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block head_title %} {{ user.username }} | {{ block.super }}{% endblock head_title %}
+
+{% block content %}
+<h1>{{ user.username }}</h1>
+<hr/>
+{% if user.item_set.all.exists %}
+{% for rest in user.restaurantlocation_set.all %}
+<div class="row">
+    <div class="col-sm-12">
+        <div class="thumbnail">
+            <h1>{{ rest.title }}</h1>
+                <p>{{ rest.location }} | {{ rest.category }}</p>
+            <p>
+                <b>Items</b>
+                <ul>
+                    {% for item in rest.item_set.all %}
+            <li style="margin-bottom:15px;"><b>{{ item.name }}</b></li>
+                        {% for ing in item.get_contents %}
+                            <span class="badge badge-default">{{ ing }}</span>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </p>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+{% else %}
+<p class="lead">No Items Found</p>
+{% endif %}
+{{ user.item_set.all }}
+
+
+{% endblock %}
