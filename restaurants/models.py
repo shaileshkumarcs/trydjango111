@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import pre_save, post_save
 # Create your models here.
 from django.core.urlresolvers import reverse
@@ -11,6 +12,26 @@ from .validators import validation_category, validation_location
 
 User = settings.AUTH_USER_MODEL
 
+class RestaurantLocationQuerySet(models.query.QuerySet):
+    def search(self, query): # RestaurantLocation.objects.all().search(query) # RestaurantLocation.objects.filter(something).search(query)
+        if query:
+            return self.filter(
+                Q(name__icontains=query)|
+                Q(location__icontains=query)|
+                Q(category__icontains=query)|
+                Q(item__name__icontains=query)|
+                Q(item__contents__icontains=query)
+            )
+        return self
+
+class RestaurantLocationManager(models.Manager):
+    def get_queryset(self):
+        return RestaurantLocationQuerySet(self.model, using=self._db)
+
+    def search(self,query): # RestaurantLocation.objects.search()
+        return self.get_queryset().search(query)
+
+
 class RestaurantLocation(models.Model):
     owner       = models.ForeignKey(User) #class_nstance.model_set.all() # Django Model Unleashed JOINCFE.com
     name        = models.CharField(max_length=120)
@@ -19,6 +40,8 @@ class RestaurantLocation(models.Model):
     timestamp   = models.DateTimeField(auto_now_add=True)
     updated     = models.DateTimeField(auto_now=True)
     slug        = models.SlugField(null=True, blank=True)
+
+    objects = RestaurantLocationManager() # add Model.objects.all()
 
     def __str__(self):
         return self.name
