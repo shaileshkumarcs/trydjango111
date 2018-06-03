@@ -4,6 +4,8 @@ from django.db.models.signals import post_save
 # Create your models here.
 #from django.http import request
 from .utils import code_generator
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
 User = settings.AUTH_USER_MODEL
 
 class ProfileManager(models.Manager):
@@ -37,8 +39,21 @@ class Profile(models.Model):
         if not self.activated:
             self.activation_key = code_generator()#'somekey' # gen key
             self.save()
-            send_mail = False#send_mail()
-            return send_mail
+            path_ = reverse('activate', kwargs={"code": self.activation_key})
+            subject = 'Activation Email'
+            from_email = settings.DEFAULT_FROM_EMAIL
+            message = f'Activate your account here : {path_}'
+            recipient_list = [self.user.email]
+            html_message = f'<p>Activate your account here : {path_}</p>'
+            sent_mail = send_mail(
+                        subject,
+                        message,
+                        from_email,
+                        recipient_list,
+                        fail_silently=False,
+                        html_message=html_message
+                    )
+            return sent_mail
 
 def post_save_user_receiver(sender, instance, created, *args, **kwargs):
     if created:
