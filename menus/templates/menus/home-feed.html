@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1></h1>
+
+<div class="row">
+        <div class="col-sm-6 text-center col-md-offset-3">
+            <h1>User Following Feed</h1>
+    {% for obj in object_list %}
+
+
+            <div class="thumbnail">
+                <h1><a href="{% url 'profiles:detail' username=obj.user.username %}">{{ obj.user.username }}</a></h1>
+                <h1>{{ obj.name }}</h1>
+                    <p>{{ obj.restaurant.title }} | {{ obj.restaurant.location }} | {{ obj.restaurant.category }}</p>
+                <p>
+                    <b>Items</b>
+                    <ul>
+
+                        <li style="margin-bottom:15px;"><b>{{ item.name }}</b></li>
+                            {% for ing in obj.get_contents %}
+                                <a href="{{ request.path }}?q={{ing}}" class="badge badge-default">{{ ing }}</a>
+                            {% endfor %}
+
+                    </ul>
+                </p>
+            </div>
+
+
+
+
+
+
+
+
+    {% empty %}
+    <li><a href="{% url 'menus:create' %}">Add New Menu Item</a></li>
+
+    {% endfor %}
+ </div>
+    </div>
+{% endblock %}

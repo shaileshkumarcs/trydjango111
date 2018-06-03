@@ -19,12 +19,14 @@ from django.views.generic import TemplateView
 
 from django.contrib.auth.views import LoginView, PasswordResetView
 
+from menus.views import HomeView
 from profiles.views import ProfileFollowToggle
+
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', TemplateView.as_view(template_name = 'home.html'), name="home"),
+    url(r'^$', HomeView.as_view(), name="home"),
     url('^login/$', LoginView.as_view(), name='login'),
     url(r'^profile-follow/$', ProfileFollowToggle.as_view(), name="follow"),
     #url('^password_reset_view/$', PasswordResetView.as_view(), name='password_reset'),
